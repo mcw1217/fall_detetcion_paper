@@ -1,4 +1,5 @@
 import sys
+import time
 # sys.path.append('pingpong')
 # from pingpong.pingpongthread import PingPongThread
 import cv2
@@ -15,6 +16,7 @@ seq_length = 30
 
 model = load_model('models/model.h5')
 
+
 # MediaPipe hands model
 mp_pose = mp.solutions.pose
 mp_drawing = mp.solutions.drawing_utils
@@ -22,7 +24,7 @@ pose = mp_pose.Pose(
     min_detection_confidence=0.5,
     min_tracking_confidence=0.5)
 
-cap = cv2.VideoCapture('dataset/test.mp4')
+cap = cv2.VideoCapture('dataset/test5.mp4')
 
 seq = []
 action_seq = []
@@ -60,7 +62,7 @@ while cap.isOpened():
 
             angle = np.degrees(angle) # Convert radian to degree
 
-            d = np.concatenate([joint.flatten(), angle])
+            d = np.concatenate([joint[[11,12,13,14,15,23,24,25,26,27,28],:].flatten(), angle])
 
             seq.append(d)
 
@@ -76,13 +78,15 @@ while cap.isOpened():
             i_pred = int(np.argmax(y_pred))
             conf = y_pred[i_pred]
 
-            if conf < 0.9:
+            if conf < 0.8:   # 넘어지는 순간 정확도가 애매해지기 때문에 계속해서 continue 처리가 된다. continue 처리가 되면 새로운 이미지가 들어오기때문에 송출시에는 끊어지는 것 처럼 보인다.
+                cv2.imshow('img',img)
                 continue
 
             action = actions[i_pred]
             action_seq.append(action)
 
             if len(action_seq) < 3:
+                cv2.imshow('img',img)
                 continue
 
             this_action = '?'

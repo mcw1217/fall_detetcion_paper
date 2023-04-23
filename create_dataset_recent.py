@@ -3,8 +3,7 @@ import mediapipe as mp
 import numpy as np
 import time, os
 
-actions = ["stand"]
-imglist= []
+actions = ["fall"]
 seq_length = 30
 secs_for_action = 30
 
@@ -15,19 +14,19 @@ pose = mp_pose.Pose(
     min_detection_confidence=0.5, min_tracking_confidence=0.5
 )
 
-cap = cv2.VideoCapture("./dataset/stand.mp4")
+cap = cv2.VideoCapture("./dataset/4.mp4")
 
 created_time = int(time.time())
 os.makedirs("dataset", exist_ok=True)
 
 while cap.isOpened():
     for idx, action in enumerate(actions):
-        idx =1
+        idx = 0
         data = []
 
         ret, img = cap.read()
 
-        img = cv2.flip(img, 1)
+        # img = cv2.flip(img, 1)
         
 
         while True:
@@ -41,8 +40,7 @@ while cap.isOpened():
             img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
             result = pose.process(img)
             img = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
-            imglist.append(img)
-
+            
             if result.pose_landmarks is not None:
                     res = result.pose_landmarks
                     joint = np.zeros((33, 4))
@@ -70,7 +68,7 @@ while cap.isOpened():
                     angle_label = np.array([angle], dtype=np.float32)
                     angle_label = np.append(angle_label, idx)
 
-                    d = np.concatenate([joint.flatten(), angle_label])
+                    d = np.concatenate([joint[[11,12,13,14,15,23,24,25,26,27,28],:].flatten(), angle_label])
 
                     data.append(d)
 
@@ -81,20 +79,17 @@ while cap.isOpened():
                 break
 
         data = np.array(data)
-        data = np.expand_dims(data, axis=0)
-        data = data[:,:30]
         print(action, data.shape)
-        for i in range(1,200):
-            np.save(os.path.join("dataset", f"raw_{action}_{i}"), data)
+        # np.save(os.path.join('dataset', f'raw_{action}_2023-2'), data)
 
-        # # Create sequence data
-        # full_seq_data = []
-        # for seq in range(len(data) - seq_length):
-        #     full_seq_data.append(data[seq : seq + seq_length])
+        # Create sequence data
+        full_seq_data = []
+        for seq in range(len(data) - seq_length):
+            full_seq_data.append(data[seq:seq + seq_length])
 
-        # full_seq_data = np.array(full_seq_data)
-        # print(action, full_seq_data.shape)
-        # np.save(os.path.join("dataset", f"seq_{action}_{created_time}"), full_seq_data)
+        full_seq_data = np.array(full_seq_data)
+        print(action, full_seq_data.shape)
+        np.save(os.path.join('dataset', f'seq_{action}-2023-8'), full_seq_data)
     break
 
 

@@ -1,0 +1,83 @@
+https://velog.io/@rlaaltj1765/CNN-LSTM-Dropout
+LSTM에 dropout 적용하는 계기
+
+
+lstm에 activation 함수를 relu로 적용하면 gpu로 연산이 불가능함
+
+tanh를 사용할 경우 gpu로 연산이 가능하지만 predict시 연산이 느려져 영상 송출이 느려지는 현상
+
+lstm보다 파라미터를 줄인 gru를 사용하여 tanh 적용 결과 그래도 송출이 느려짐
+
+gru에 relu를 적용 후 과적합과 파라미터를 줄이기 위해 gru층에 dropout 0.3을 적용하여
+속도와 정확도를 좀 더 높혔다.
+
+gru층을 2개 사용하고 dense층을 제거하면 나름 괜찮은 성능을 나타내며 속도도 준수함
+
+gru층 2개와 dense층까지 추가하면 연산 속도가 느려져 송출이 느려짐
+
+
+----- 데이터셋의 데이터가 137 로 모든 좌표를 넣기때문에 계산 역시 많이한다
+	그렇기때문에 137개에서 필요한 관절좌표만 뽑아내어 47개로 줄여 학습을 진행한다.
+
+
+파라미터 수를 3배 가까이 줄인 후 모델을 학습시킨 결과 영상송출 속도가 매우 빨라졌다.
+gru층 2개일 경우 정확도 또한 매우 준수한 성능을 보인다. activation='relu' ( 과거 best ) 
+
+gru층 1개와 dense32층을 하나 넣을 경우 성능은 준수하지만 속도가 약간 느려진다.
+
+
+gru계층 기본 activation을 사용, 그다음 gru 층도 기본 activation을 사용
+( 속도 매우 빠르면, 성능도 매우 준수 (과거 best)
+
+gru64 dropout0.3 기본 activation, 그다음 dense activation relu 
+( 속도 빠름, 성능 매우 안좋음 )
+
+gru64 dropout0.3 기본 activation, 그 다음 dense activation tanh 
+( 속도 빠름, 성능 매우 안좋음 )
+
+gru64 dropout0.3 기본 activation, 그 다음 dropout 0.3 ,그다음 dense32 activation tanh
+( 애매함, 성능 매우 안좋음 )
+
+
+
+gru64 dropout0.3 기본 activation, 그 다음 dropout 0.5 ,그다음 dense32 activation tanh
+( 속도 적당함, 성능 안좋음 )
+
+
+gru64 dropout0.3 기본 activation, 그 다음 dropout 0.3, 그다음 dens32 activation relu
+( 속도 매우 빠름, 성능 매우 안좋음 )
+
+
+gru64 dropout0.3 기본 activation, 그다음 dens32 activation relu
+( 속도 매우 빠름, 성능 매우 안좋음 ) / dropout 층을 제거하면 속도가 느려짐
+
+
+[!]문제1.라벨이 변경될때 렉이 걸림 / 결과 :정확도 이슈때문에 영상송출이 느리게 되는 것임 프레임마다 정확도가 높다면 버퍼링이 존재하지않음 
+
+if conf < 0.8:
+	continue 에서 continue 처리 되기때문에 현재프레임은 출력되지않고 다음 프레임을 다시 가져와작업하기 때문에 정확도인 0.8 을 줄이면서 threshold를 조절하면 끊어짐이 덜하다 
+
+
+[!]데이터셋 생성 팁:
+create_dataset_recent에서 데이터 생성시 
+action = fall or stand 두가지로 지정 후
+fall일 경우 idx= 0 / stand일 경우 idx =1 
+그 후 입력 영상과 맨 아래의 np.save에서 영상 이름 저장하는 부분을 바꿔서 서로 다른 np로 저장시킨다. 또한 데이터셋을 증강시킬때는 좌우 반전을 시키면 된다.
+
+좌우반전할 경우 또 다른 데이터셋으로 적용되기때문에 반드시 하는것이 좋다.
+
+
+[!] 좌우 반전 테스트 영상을 기준으로 모델 재설정
+
+gru64 dropout0.3 activation=relu, 그다음 dense32 activation=relu 
+(매우매우 준수한 성능 (현재 best)
+
+gru64 dropout0.3 activation=relu, gru32 dropout=0.3 activation=relu 
+(매우매우 준수한 성능 / dense보다 살짝 정확도 딸림 )
+
+gru64 droput0.3 기본 activation, gru 32 droput0.3 기본activation
+(매우 괜찮은 성능 / 좌우반전 테스트에서 높은 성능을 보임 ) (best)
+
+gru64 droput0.3 activation=relu, gru 32 droput0.3 activation=relu, dense32 activation=relu
+( 괜찮은 성능 )
+
