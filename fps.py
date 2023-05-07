@@ -19,7 +19,7 @@ def draw_text(img, text, x, y):
 
 
 # 웹캠 연결
-cap = cv2.VideoCapture("dataset/1.mp4")
+cap = cv2.VideoCapture(0)
 
 
 # 웹캠에서 fps 값 획득

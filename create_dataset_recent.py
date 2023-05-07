@@ -14,7 +14,12 @@ pose = mp_pose.Pose(
     min_detection_confidence=0.5, min_tracking_confidence=0.5
 )
 
-cap = cv2.VideoCapture("./dataset/4.mp4")
+cap = cv2.VideoCapture("./dataset/0-fall/2.mp4")
+_,img = cap.read()
+width = int(img.shape[1] / 2)
+height = int(img.shape[0] /2)
+cv2.namedWindow('img', 0)
+cv2.resizeWindow("img",width,height )
 
 created_time = int(time.time())
 os.makedirs("dataset", exist_ok=True)
@@ -89,7 +94,7 @@ while cap.isOpened():
 
         full_seq_data = np.array(full_seq_data)
         print(action, full_seq_data.shape)
-        np.save(os.path.join('dataset', f'seq_{action}-2023-8'), full_seq_data)
+        np.save(os.path.join('dataset', f'seq_{action}-2023-2'), full_seq_data)
     break
 
 
