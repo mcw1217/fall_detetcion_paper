@@ -3,7 +3,7 @@ import mediapipe as mp
 import numpy as np
 import time, os
 
-actions = ["fall"]
+actions = ["lie"]
 seq_length = 30
 secs_for_action = 30
 
@@ -14,7 +14,7 @@ pose = mp_pose.Pose(
     min_detection_confidence=0.5, min_tracking_confidence=0.5
 )
 
-cap = cv2.VideoCapture("./dataset/0-fall/2.mp4")
+cap = cv2.VideoCapture("./dataset/3-lie/liedata4.mp4")
 _,img = cap.read()
 width = int(img.shape[1] / 2)
 height = int(img.shape[0] /2)
@@ -26,7 +26,7 @@ os.makedirs("dataset", exist_ok=True)
 
 while cap.isOpened():
     for idx, action in enumerate(actions):
-        idx = 0
+        idx = 3
         data = []
 
         ret, img = cap.read()
@@ -41,7 +41,7 @@ while cap.isOpened():
                 print("Ignoring empty camera frame.")
                 break
 
-            img = cv2.flip(img, 1)
+            img = cv2.flip(img, 0)            
             img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
             result = pose.process(img)
             img = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
@@ -94,7 +94,7 @@ while cap.isOpened():
 
         full_seq_data = np.array(full_seq_data)
         print(action, full_seq_data.shape)
-        np.save(os.path.join('dataset', f'seq_{action}-2023-2'), full_seq_data)
+        np.save(os.path.join('dataset', f'seq_{action}-2023-6'), full_seq_data)
     break
 
 

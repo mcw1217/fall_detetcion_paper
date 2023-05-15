@@ -24,13 +24,13 @@ pose = mp_pose.Pose(
     min_detection_confidence=0.5,
     min_tracking_confidence=0.5)
 
-cap = cv2.VideoCapture("dataset/test/testdata.mp4")
+cap = cv2.VideoCapture("dataset/test/testdata17.mp4")
 _,img = cap.read()
-# width = int(img.shape[1] / 2)
-# height = int(img.shape[0] /2)
-# print(width)
-# cv2.namedWindow('img', 0) 
-# cv2.resizeWindow("img",width,height )
+width = int(img.shape[1] / 2)
+height = int(img.shape[0] /2)
+print(width)
+cv2.namedWindow('img', 0) 
+cv2.resizeWindow("img",width,height )
 
 seq = []
 action_seq = []
