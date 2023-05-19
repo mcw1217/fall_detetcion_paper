@@ -14,7 +14,7 @@ pose = mp_pose.Pose(
     min_detection_confidence=0.5, min_tracking_confidence=0.5
 )
 
-cap = cv2.VideoCapture("./dataset/3-lie/liedata4.mp4")
+cap = cv2.VideoCapture("./dataset/3-lie/liedata.mp4")
 _,img = cap.read()
 width = int(img.shape[1] / 2)
 height = int(img.shape[0] /2)
@@ -90,6 +90,7 @@ while cap.isOpened():
         # Create sequence data
         full_seq_data = []
         for seq in range(len(data) - seq_length):
+            vector_l = abs(data[seq] - data[seq + seq_length])
             full_seq_data.append(data[seq:seq + seq_length])
 
         full_seq_data = np.array(full_seq_data)

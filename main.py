@@ -6,6 +6,8 @@ import cv2
 import mediapipe as mp
 import numpy as np
 from tensorflow.keras.models import load_model
+from datetime import datetime
+now = datetime.now()
 
 # PingPongThreadInstance = PingPongThread(number=2)
 # PingPongThreadInstance.start()
@@ -24,7 +26,7 @@ pose = mp_pose.Pose(
     min_detection_confidence=0.5,
     min_tracking_confidence=0.5)
 
-cap = cv2.VideoCapture("dataset/test/testdata17.mp4")
+cap = cv2.VideoCapture("dataset/test/testdata5.mp4")
 _,img = cap.read()
 width = int(img.shape[1] / 2)
 height = int(img.shape[0] /2)
@@ -35,6 +37,7 @@ cv2.resizeWindow("img",width,height )
 seq = []
 action_seq = []
 last_action = None
+count=0
 
 while cap.isOpened():
     ret, img = cap.read()
@@ -67,7 +70,7 @@ while cap.isOpened():
 
             angle = np.degrees(angle) # Convert radian to degree
 
-            d = np.concatenate([joint[[11,12,13,14,15,23,24,25,26,27,28],:].flatten(), angle])
+            d = np.concatenate([joint[:].flatten(), angle])
 
             seq.append(d)
 
