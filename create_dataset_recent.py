@@ -90,7 +90,6 @@ while cap.isOpened():
         # Create sequence data
         full_seq_data = []
         for seq in range(len(data) - seq_length):
-            vector_l = abs(data[seq] - data[seq + seq_length])
             full_seq_data.append(data[seq:seq + seq_length])
 
         full_seq_data = np.array(full_seq_data)

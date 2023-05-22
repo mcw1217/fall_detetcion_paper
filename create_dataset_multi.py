@@ -90,10 +90,6 @@ for countdown in range(1,2):
             # Create sequence data
             full_seq_data = []
             for seq in range(len(data) - seq_length):
-                vector_l = abs(data[seq] - data[seq + seq_length])
-                for i in range(0, seq_length-1):
-                    data[seq + i].append(0)
-                data[seq + seq_length].append(vector_l)
                 full_seq_data.append(data[seq:seq + seq_length])    
 
             full_seq_data = np.array(full_seq_data)
