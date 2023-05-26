@@ -3,10 +3,11 @@ import mediapipe as mp
 import numpy as np
 import time, os
 
-actions = ["stand"]
+actions = ["walking"]
 seq_length = 30
 secs_for_action = 30 
 queue = list()
+count = 0
 
 # MediaPipe hands model
 mp_pose = mp.solutions.pose
@@ -15,7 +16,7 @@ pose = mp_pose.Pose(
     min_detection_confidence=0.5, min_tracking_confidence=0.5
 )
 for countdown in range(1,2):
-    cap = cv2.VideoCapture(f"./dataset/2-walking/walking-{countdown}.mp4")
+    cap = cv2.VideoCapture(f"./dataset/test/walking-{countdown}.mp4")
     _,img = cap.read()
     width = int(img.shape[1] / 2)
     height = int(img.shape[0] /2)
@@ -74,21 +75,34 @@ for countdown in range(1,2):
                         angle_label = np.array([angle], dtype=np.float32)
                         angle_label = np.append(angle_label, idx)
 
-
+                        if count == 0:
+                            queue.append(joint[:,:3])
+                            print("[NOTICE] : First data appended queue!")
+                            print("[NOTICE] : Input data shape - ", queue[0].shape)
                         pre_v = queue.pop()
-                        queue.append(joint[:, :3])          
+                        print("[NOTICE] : 큐에서 이전 프레임을 추출")
+                        print("[NOTICE] : 현재 큐에 남은 데이터 - ", queue)
+                        queue.append(joint[:, :3])
+                        print("[NOTICE] : 큐에 현재 프레임 입력")
+                        print("[NOTICE] : 현재 큐에 남은 데이터 - ", queue)          
                         
                         new_v = joint[:,:3] - pre_v
                         new_v = new_v / np.linalg.norm(new_v, axis=1)[:, np.newaxis]
+                        print("[NOTICE] : 벡터의 방향 계산 완료!")
+                        print("[NOTICE] : 현재 벡터의 방향값 - ",new_v)
 
-                        
+                        # 기존의 관절좌표 데이터와 라벨 데이터 생성
                         d = np.concatenate([joint[:].flatten(), angle_label])
+                        # 생성된 데이터에 이전 프레임과 현재 프레임의 벡터의 방향을 추가
+                        d = np.concatenate([d.flatten(), new_v.flatten()])
+                        print("[NOTICE] : 생성된 데이터의 Shape - ",d.shape)
 
                         data.append(d)
 
                         mp_drawing.draw_landmarks(img, res, mp_pose.POSE_CONNECTIONS)
 
                 cv2.imshow("img", img)
+                count += 1
                 if cv2.waitKey(1) == ord("q"):
                     break
 
