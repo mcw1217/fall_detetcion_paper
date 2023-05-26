@@ -5,7 +5,8 @@ import time, os
 
 actions = ["stand"]
 seq_length = 30
-secs_for_action = 30
+secs_for_action = 30 
+queue = list()
 
 # MediaPipe hands model
 mp_pose = mp.solutions.pose
@@ -73,6 +74,14 @@ for countdown in range(1,2):
                         angle_label = np.array([angle], dtype=np.float32)
                         angle_label = np.append(angle_label, idx)
 
+
+                        pre_v = queue.pop()
+                        queue.append(joint[:, :3])          
+                        
+                        new_v = joint[:,:3] - pre_v
+                        new_v = new_v / np.linalg.norm(new_v, axis=1)[:, np.newaxis]
+
+                        
                         d = np.concatenate([joint[:].flatten(), angle_label])
 
                         data.append(d)
