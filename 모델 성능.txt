@@ -70,7 +70,7 @@ fall일 경우 idx= 0 / stand일 경우 idx =1
 [!] 좌우 반전 테스트 영상을 기준으로 모델 재설정
 
 gru64 dropout0.3 activation=relu, 그다음 dense32 activation=relu 
-(매우매우 준수한 성능 (현재 best)
+(매우매우 준수한 성능 (이전 best)
 
 gru64 dropout0.3 activation=relu, gru32 dropout=0.3 activation=relu 
 (매우매우 준수한 성능 / dense보다 살짝 정확도 딸림 )
@@ -80,4 +80,42 @@ gru64 droput0.3 기본 activation, gru 32 droput0.3 기본activation
 
 gru64 droput0.3 activation=relu, gru 32 droput0.3 activation=relu, dense32 activation=relu
 ( 괜찮은 성능 )
+
+
+
+
+[!] 프레임 좌표간의 벡터의 방향성을 구한 값을 넣음
+
+(best)
+train_test_split 0.2
+GRU64 dropout 0.2 activation=relu
+dense128 activate=relu
+Dropout0.1
+dense64 activate=relu
+Dropout0.1
+dense32 activate=relu
+Dropout0.1
+dense32 activate=relu
+( 준수한 성능, test5,6,7 에서 긍정적인 성과 나옴, 단 test5에서 걷는 것을 lie 잡는 경우가 있음( 카메라의 각도가 원인 ), 카메라를 기준으로 정면과 후면으로 넘어지는 경우도 잡아냄 )
+
+
+[!] 속도, 가속도를 추가한 결과 Fall을 잡지 못함 / 벡터의 방향성만 넣는 경우가 제일 성능이 좋음
+
+
+(best)
+train_test_split 0.2
+GRU64 dropout 0.2 activation=relu
+dense128 activate=relu
+Dropout0.1
+dense64 activate=relu
+Dropout0.1
+dense32 activate=relu
+Dropout0.1
+dense32 activate=relu
+
+[!] 벡터의 방향성, 속도를 추가로 넣어 학습 시킴
+준수한 성능 
+
+
+
 

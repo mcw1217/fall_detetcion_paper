@@ -1,21 +1,22 @@
+import time
 import numpy as np
-queue = list()
-
-test = [1,2,3]
-test1 = [4,5,6]
-
-queue.append(test)
-queue.append(test1)
+from datetime import datetime
 
 
-v1 = queue.pop()
-v2 = queue.pop()
 
-v3 = np.array([v1]) -np.array([v2])
-queue.append(v3)
-test = queue.pop()
-print(type(test))
-v3 = v3 / np.linalg.norm(v3, axis=1)[:, np.newaxis]
+def calculate_velocity(pre_pos, cur_pos, pre_time, cur_time):
+    return (cur_pos - pre_pos) / (cur_time - pre_time)
 
 
-print(v3[0])
+initial_position = np.array([0,0,0])
+initial_time= float(datetime.now().strftime('%Y%m%d%H%M%S.%f'))
+
+
+while True: 
+    current_position = np.array([1,1,1])
+    current_time = float(datetime.now().strftime('%Y%m%d%H%M%S'))
+    print(calculate_velocity(initial_position, current_position, initial_time, current_time))
+    initial_position = current_position
+    initial_time = current_time
+
+

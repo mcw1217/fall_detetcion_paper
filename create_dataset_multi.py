@@ -2,12 +2,24 @@ import cv2
 import mediapipe as mp
 import numpy as np
 import time, os
+from datetime import datetime
 
-actions = ["walking"]
+#설정 파라미터
+actions = ["sit"]
+indexing = 4
+media_size= 50
+flip_option = False #처음 생성할때는 False / 반전데이터 생성시에만 True 
+
+plus_size= 0
+if flip_option == True:
+    plus_size = media_size
+    
+
 seq_length = 30
 secs_for_action = 30 
 queue = list()
-count = 0
+pre_time = 0
+
 
 # MediaPipe hands model
 mp_pose = mp.solutions.pose
@@ -15,8 +27,8 @@ mp_drawing = mp.solutions.drawing_utils
 pose = mp_pose.Pose(
     min_detection_confidence=0.5, min_tracking_confidence=0.5
 )
-for countdown in range(1,2):
-    cap = cv2.VideoCapture(f"./dataset/test/walking-{countdown}.mp4")
+for countdown in range(1,media_size+1):
+    cap = cv2.VideoCapture(f"./dataset/{indexing}-{actions[0]}/{actions[0]}-{countdown}.mp4")
     _,img = cap.read()
     width = int(img.shape[1] / 2)
     height = int(img.shape[0] /2)
@@ -25,25 +37,22 @@ for countdown in range(1,2):
 
     created_time = int(time.time())
     os.makedirs("dataset", exist_ok=True)
+    count = 0
 
     while cap.isOpened():
         for idx, action in enumerate(actions):
-            idx = 2
+            idx = indexing
             data = []
-
-            ret, img = cap.read()
-
-            # img = cv2.flip(img, 1)
             
-
             while True:
                 ret, img = cap.read()
                 
                 if not ret:
                     print("Ignoring empty camera frame.")
                     break
-
-                img = cv2.flip(img, 1)            
+                
+                if flip_option == True:
+                    img = cv2.flip(img, 1)            
                 img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
                 result = pose.process(img)
                 img = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
@@ -74,35 +83,36 @@ for countdown in range(1,2):
 
                         angle_label = np.array([angle], dtype=np.float32)
                         angle_label = np.append(angle_label, idx)
-
+                        
+                        #첫 프레임일 경우만 queue에 현재 좌표를 넣어 0을 만듦
+                        #벡터의 방향성 구하는 코드
                         if count == 0:
                             queue.append(joint[:,:3])
                             print("[NOTICE] : First data appended queue!")
                             print("[NOTICE] : Input data shape - ", queue[0].shape)
                         pre_v = queue.pop()
-                        print("[NOTICE] : 큐에서 이전 프레임을 추출")
-                        print("[NOTICE] : 현재 큐에 남은 데이터 - ", queue)
                         queue.append(joint[:, :3])
-                        print("[NOTICE] : 큐에 현재 프레임 입력")
-                        print("[NOTICE] : 현재 큐에 남은 데이터 - ", queue)          
                         
                         new_v = joint[:,:3] - pre_v
                         new_v = new_v / np.linalg.norm(new_v, axis=1)[:, np.newaxis]
-                        print("[NOTICE] : 벡터의 방향 계산 완료!")
-                        print("[NOTICE] : 현재 벡터의 방향값 - ",new_v)
-
-                        # 기존의 관절좌표 데이터와 라벨 데이터 생성
-                        d = np.concatenate([joint[:].flatten(), angle_label])
-                        # 생성된 데이터에 이전 프레임과 현재 프레임의 벡터의 방향을 추가
-                        d = np.concatenate([d.flatten(), new_v.flatten()])
-                        print("[NOTICE] : 생성된 데이터의 Shape - ",d.shape)
+                        
+                        #벡터의 속도
+                        cur_time = float(datetime.now().strftime('%Y%m%d%H%M%S.%f'))
+                        if count== 0:
+                            pre_time = cur_time-0.001
+                        speed = (joint[:,:3] - pre_v) / (cur_time-pre_time) # 현재 프레임의 속도
+                        pre_time = cur_time
+                        
+                        
+                        #데이터 결합
+                        d = np.concatenate([joint[:].flatten(), new_v.flatten(), speed.flatten(), angle_label])
 
                         data.append(d)
 
                         mp_drawing.draw_landmarks(img, res, mp_pose.POSE_CONNECTIONS)
+                        count += 1
 
                 cv2.imshow("img", img)
-                count += 1
                 if cv2.waitKey(1) == ord("q"):
                     break
 
@@ -117,7 +127,7 @@ for countdown in range(1,2):
 
             full_seq_data = np.array(full_seq_data)
             print(action, full_seq_data.shape)
-            np.save(os.path.join('dataset/sampledata', f'seq_{action}-2023-{countdown}'), full_seq_data)
+            np.save(os.path.join('dataset/acldataset', f'seq_{action}-2023-{countdown+plus_size}'), full_seq_data)
             cv2.destroyAllWindows()
         break
 
