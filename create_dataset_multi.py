@@ -5,9 +5,9 @@ import time, os
 from datetime import datetime
 
 #설정 파라미터
-actions = ["sit"]
-indexing = 4
-media_size= 50
+actions = ["fall"]
+indexing = 0
+media_size= 1
 flip_option = False #처음 생성할때는 False / 반전데이터 생성시에만 True 
 
 plus_size= 0
@@ -28,7 +28,8 @@ pose = mp_pose.Pose(
     min_detection_confidence=0.5, min_tracking_confidence=0.5
 )
 for countdown in range(1,media_size+1):
-    cap = cv2.VideoCapture(f"./dataset/{indexing}-{actions[0]}/{actions[0]}-{countdown}.mp4")
+    # cap = cv2.VideoCapture(f"./dataset/{indexing}-{actions[0]}/{actions[0]}-{countdown}.mp4")
+    cap = cv2.VideoCapture(f"./dataset/test/new_test1.mp4")
     _,img = cap.read()
     width = int(img.shape[1] / 2)
     height = int(img.shape[0] /2)
@@ -127,7 +128,7 @@ for countdown in range(1,media_size+1):
 
             full_seq_data = np.array(full_seq_data)
             print(action, full_seq_data.shape)
-            np.save(os.path.join('dataset/acldataset', f'seq_{action}-2023-{countdown+plus_size}'), full_seq_data)
+            np.save(os.path.join('./dataset/confusion_matrix', f'seq_{action}-2023-{countdown+plus_size}'), full_seq_data)
             cv2.destroyAllWindows()
         break
 

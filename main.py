@@ -8,11 +8,12 @@ from datetime import datetime
 now = datetime.now()
 
 
-actions = ['fall','stand','walking','lie']
+actions = ['fall','stand','walking','lie','sit']
 seq_length = 30
 queue= list()
 pre_time=0
-model = load_model('models/model.h5')
+model = load_model('models/model.h5') 
+# model = load_model('any_model/model.h5') 
 
 
 # MediaPipe hands model
@@ -22,7 +23,7 @@ pose = mp_pose.Pose(
     min_detection_confidence=0.5,
     min_tracking_confidence=0.5)
 
-cap = cv2.VideoCapture("dataset/test/testdata6.mp4")
+cap = cv2.VideoCapture("dataset/test/test26.mp4")
 _,img = cap.read()
 width = int(img.shape[1] / 2)
 height = int(img.shape[0] /2)
@@ -72,7 +73,7 @@ while cap.isOpened():
             pre_v = queue.pop()
             queue.append(joint[:, :3])
             new_v = joint[:,:3] - pre_v
-            new_v = new_v / np.linalg.norm(new_v, axis=1)[:, np.newaxis]
+            # new_v = new_v / np.linalg.norm(new_v, axis=1)[:, np.newaxis]
             
             #벡터의 가속도 
             cur_time = float(datetime.now().strftime('%Y%m%d%H%M%S.%f'))
@@ -83,6 +84,7 @@ while cap.isOpened():
             
             
             d = np.concatenate([joint[:].flatten(), new_v.flatten(),speed.flatten(),angle])
+            # d = np.concatenate([joint[:].flatten(),angle])
             d = np.nan_to_num(d) 
             
             seq.append(d)
