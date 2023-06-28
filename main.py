@@ -12,7 +12,7 @@ actions = ['fall','stand','walking','lie','sit']
 seq_length = 30
 queue= list()
 pre_time=0
-model = load_model('models/model.h5') 
+model = load_model('vec_model/model.h5') 
 # model = load_model('cd_model/model.h5') 
 
 
@@ -23,7 +23,7 @@ pose = mp_pose.Pose(
     min_detection_confidence=0.5,
     min_tracking_confidence=0.5)
 
-cap = cv2.VideoCapture("dataset/testdata/test14.mp4")
+cap = cv2.VideoCapture("dataset/testdata/test23.mp4")
 _,img = cap.read()
 width = int(img.shape[1] / 2)
 height = int(img.shape[0] /2)
