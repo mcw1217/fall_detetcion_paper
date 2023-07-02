@@ -7,8 +7,8 @@ from datetime import datetime
 #설정 파라미터
 actions = ["fall"]
 indexing = 0
-media_size= 30
-flip_option = False #처음 생성할때는 False / 반전데이터 생성시에만 True 
+media_size= 52
+flip_option = True #처음 생성할때는 False / 반전데이터 생성시에만 True 
 
 plus_size= 0
 if flip_option == True:
@@ -28,8 +28,8 @@ pose = mp_pose.Pose(
     min_detection_confidence=0.5, min_tracking_confidence=0.5
 )
 for countdown in range(1,media_size+1):
-    # cap = cv2.VideoCapture(f"./dataset/{indexing}-{actions[0]}/{actions[0]}-{countdown}.mp4")
-    cap = cv2.VideoCapture(f"./dataset/new_testdata/test{countdown}.mp4")
+    cap = cv2.VideoCapture(f"./dataset/{indexing}-{actions[0]}/{actions[0]}-{countdown}.mp4")
+    # cap = cv2.VideoCapture(f"./dataset/new_testdata/test{countdown}.mp4")
     # cap = cv2.VideoCapture(f"./dataset/test/new_test1.mp4")
     _,img = cap.read()
     width = int(img.shape[1] / 2)
@@ -107,8 +107,8 @@ for countdown in range(1,media_size+1):
                         
                         
                         #데이터 결합
-                        d = np.concatenate([joint[:].flatten(), new_v.flatten(), speed.flatten(), angle_label])
-
+                        # d = np.concatenate([joint[:].flatten(), new_v.flatten(), speed.flatten(), angle_label])
+                        d = np.concatenate([new_v.flatten(), speed.flatten(), angle_label])
                         data.append(d)
 
                         mp_drawing.draw_landmarks(img, res, mp_pose.POSE_CONNECTIONS)
@@ -129,7 +129,7 @@ for countdown in range(1,media_size+1):
 
             full_seq_data = np.array(full_seq_data)
             print(action, full_seq_data.shape)
-            np.save(os.path.join('./dataset/confusion_matrix', f'seq_{action}-2023-{countdown+plus_size}'), full_seq_data)
+            np.save(os.path.join('./dataset/no_joint_dataset', f'seq_{action}-2023-{countdown+plus_size}'), full_seq_data)
             cv2.destroyAllWindows()
         break
 

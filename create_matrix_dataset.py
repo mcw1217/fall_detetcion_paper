@@ -84,28 +84,29 @@ for countdown in range(1,media_size+1):
                         angle_label = np.array([angle], dtype=np.float32)
                         angle_label = np.append(angle_label, idx)
                         
-                        #첫 프레임일 경우만 queue에 현재 좌표를 넣어 0을 만듦
-                        #벡터의 방향성 구하는 코드
-                        # if count == 0:
-                        #     queue.append(joint[:,:3])
-                        #     print("[NOTICE] : First data appended queue!")
-                        #     print("[NOTICE] : Input data shape - ", queue[0].shape)
-                        # pre_v = queue.pop()
-                        # queue.append(joint[:, :3])
+                        # 첫 프레임일 경우만 queue에 현재 좌표를 넣어 0을 만듦
+                        # 벡터의 방향성 구하는 코드
+                        if count == 0:
+                            queue.append(joint[:,:3])
+                            print("[NOTICE] : First data appended queue!")
+                            print("[NOTICE] : Input data shape - ", queue[0].shape)
+                        pre_v = queue.pop()
+                        queue.append(joint[:, :3])
                         
-                        # new_v = joint[:,:3] - pre_v
-                        # new_v = new_v / np.linalg.norm(new_v, axis=1)[:, np.newaxis]
+                        new_v = joint[:,:3] - pre_v
+                        new_v = new_v / np.linalg.norm(new_v, axis=1)[:, np.newaxis]
                         
-                        # #벡터의 속도
-                        # cur_time = float(datetime.now().strftime('%Y%m%d%H%M%S.%f'))
-                        # if count== 0:
-                        #     pre_time = cur_time-0.001
-                        # speed = (joint[:,:3] - pre_v) / (cur_time-pre_time) # 현재 프레임의 속도
-                        # pre_time = cur_time
+                        #벡터의 속도
+                        cur_time = float(datetime.now().strftime('%Y%m%d%H%M%S.%f'))
+                        if count== 0:
+                            pre_time = cur_time-0.001
+                        speed = (joint[:,:3] - pre_v) / (cur_time-pre_time) # 현재 프레임의 속도
+                        pre_time = cur_time
                         
                         
                         #데이터 결합
                         # d = np.concatenate([joint[:].flatten(), new_v.flatten(), speed.flatten(), angle_label])
+                        # d = np.concatenate([new_v.flatten(), speed.flatten(), angle_label])
                         d = np.concatenate([joint[:].flatten(), angle_label])
 
                         data.append(d)
