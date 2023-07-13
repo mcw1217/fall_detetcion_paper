@@ -12,7 +12,7 @@ actions = ['fall','stand','walking','lie','sit']
 seq_length = 30
 queue= list()
 pre_time=0
-model = load_model('models/model.h5')
+model = load_model('vec_model/model.h5')
 # model = load_model('vec_model/model.h5') 
 # model = load_model('cd_model/model.h5') 
 
@@ -24,7 +24,7 @@ pose = mp_pose.Pose(
     min_detection_confidence=0.5,
     min_tracking_confidence=0.5)
 
-cap = cv2.VideoCapture("dataset/test/test26.mp4")
+cap = cv2.VideoCapture("dataset/4-sit/sit-1.mp4")
 _,img = cap.read()
 width = int(img.shape[1] / 2)
 height = int(img.shape[0] /2)
@@ -84,8 +84,8 @@ while cap.isOpened():
             pre_time = cur_time
             
             
-            # d = np.concatenate([joint[:].flatten(), new_v.flatten(),speed.flatten(),angle])
-            d = np.concatenate([new_v.flatten(),speed.flatten(),angle])
+            d = np.concatenate([joint[:].flatten(), new_v.flatten(),speed.flatten(),angle])
+            # d = np.concatenate([new_v.flatten(),speed.flatten(),angle])
             # d = np.concatenate([joint[:].flatten(),angle])
             d = np.nan_to_num(d) 
             

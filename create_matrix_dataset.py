@@ -5,8 +5,8 @@ import time, os
 from datetime import datetime
 
 #설정 파라미터
-actions = ["fall"]
-indexing = 0
+actions = ["sit"]
+indexing = 4
 media_size= 30
 flip_option = False #처음 생성할때는 False / 반전데이터 생성시에만 True 
 
@@ -28,7 +28,8 @@ pose = mp_pose.Pose(
     min_detection_confidence=0.5, min_tracking_confidence=0.5
 )
 for countdown in range(1,media_size+1):
-    cap = cv2.VideoCapture(f"./dataset/new_testdata/test{countdown}.mp4")
+    # cap = cv2.VideoCapture(f"./dataset/new_testdata/test{countdown}.mp4")
+    cap = cv2.VideoCapture(f"./dataset/4-sit/sit-{countdown}.mp4")
     _,img = cap.read()
     width = int(img.shape[1] / 2)
     height = int(img.shape[0] /2)
