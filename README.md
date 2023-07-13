@@ -1,10 +1,10 @@
 # Fall_detetcion_paper
 
-## 관절좌표 모델의 Confusion Matrix
+### 관절좌표 모델의 Confusion Matrix
 ![관절좌표 모델](https://github.com/mcw1217/fall_detetcion_paper/assets/87608623/788e25df-458c-4e6b-90c6-78b740a5ac52)
 
 
-## 관절좌표,속도,시간 모델의 Confusion Matrix
+### 관절좌표,속도,시간 모델의 Confusion Matrix
 ![속도,방향 모델](https://github.com/mcw1217/fall_detetcion_paper/assets/87608623/8eac431d-6789-4a59-b48b-ce45ef9c63cd)
 
 - 테스트 결과 '관절좌표 모델'에 비해 '관절좌표,속도,시간 모델' 의 Fall의 감지율이 더 높으며, 오류율 역시 더 적게 나타난다.
