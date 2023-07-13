@@ -6,10 +6,11 @@
 3. cd_confusion_matrix(관절좌표 matrix용 데이터셋)의 정확도보다 confusion_matrix(관절좌표,속도,방향 martix용 데이터셋)이 더 높은 정확도를 보임
 
 ## 관절좌표 모델의 Confusion Matrix
-![관절좌표 Confusion](https://github.com/mcw1217/fall_detetcion_paper/assets/87608623/3f138a77-72a0-4925-b078-cf2c6c1b404a)
+![관절좌표 모델](https://github.com/mcw1217/fall_detetcion_paper/assets/87608623/788e25df-458c-4e6b-90c6-78b740a5ac52)
+
 
 ## 관절좌표,속도,시간 모델의 Confusion Matrix
-![속도,시간 Confusion](https://github.com/mcw1217/fall_detetcion_paper/assets/87608623/191905bf-02f3-4ba4-9a66-f70040e06255)
+![속도,방향 모델](https://github.com/mcw1217/fall_detetcion_paper/assets/87608623/8eac431d-6789-4a59-b48b-ce45ef9c63cd)
 
 - 테스트 결과 '관절좌표 모델'에 비해 '관절좌표,속도,시간 모델' 의 Fall의 감지율이 더 높으며, 오류율 역시 더 적게 나타난다.
 - 테스트는 불특정 다수의 낙상 영상 30개를 기준으로 함
