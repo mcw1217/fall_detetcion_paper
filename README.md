@@ -13,4 +13,8 @@
 ![속도,방향 모델](https://github.com/mcw1217/fall_detetcion_paper/assets/87608623/8eac431d-6789-4a59-b48b-ce45ef9c63cd)
 
 - 테스트 결과 '관절좌표 모델'에 비해 '관절좌표,속도,시간 모델' 의 Fall의 감지율이 더 높으며, 오류율 역시 더 적게 나타난다.
+- Confusion Matrix의 Denied는 행동 감지 실패를 의미한다.
 - 테스트는 불특정 다수의 낙상 영상 30개를 기준으로 함
+
+- 관절좌표 모델의 Recall: 88%
+- 관절좌표, 속도, 시간 모델의 Recall: 95%
