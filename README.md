@@ -1,4 +1,4 @@
-# fall_detetcion_paper
+# Fall_detetcion_paper
 
 ## 관절좌표 모델의 Confusion Matrix
 ![관절좌표 모델](https://github.com/mcw1217/fall_detetcion_paper/assets/87608623/788e25df-458c-4e6b-90c6-78b740a5ac52)
@@ -16,7 +16,7 @@
 
 
 
---
+## COMMIT LOG
 
 [COMMIT] :  MODIFY CONFUSION MATRIX
 1. confusion_matrix.py 코드에서 51번째 줄의 confidence를 확인하는 코드에 오류가 발생하여 모든 confidence가 첫번째 prediction의 confidence로 고정되는 오류를 해결
