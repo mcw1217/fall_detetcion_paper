@@ -7,16 +7,16 @@ actions = [
     'fall','stand','walking','lie','sit'
 ]
 action_seq = []
-# model = load_model('cd_model/model.h5')
-model = load_model('vec_model/model.h5')
+model = load_model('cd_model/model.h5')
+# model = load_model('vec_model/model.h5')
 # model = load_model('models/model.h5')
 y_test = []
 x_test = []
 result_y = []
 result_pre = []
-for i in range(1,30):
-    # test_data = np.load(f'./dataset/cd_confusion_matrix/seq_fall-2023-{i}.npy')
-    test_data = np.load(f'./dataset/confusion_matrix/seq_fall-2023-{i}.npy')
+for i in range(1,60):
+    test_data = np.load(f'./dataset/cd_confusion_matrix/seq_fall-2023-{i}.npy')
+    # test_data = np.load(f'./dataset/confusion_matrix/seq_fall-2023-{i}.npy')
     first = True
     if test_data.shape[0] > 2:
         # for i in range(test_data.shape[0]):
